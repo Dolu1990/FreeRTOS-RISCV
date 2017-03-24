@@ -78,7 +78,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
-#include "configstring.h"
+//#include "configstring.h"
 
 
 /* A variable is used to keep track of the critical section nesting.  This
@@ -93,8 +93,8 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 BaseType_t xStartContext[31] = {0};
 #endif
 
-volatile uint64_t* mtime;
-volatile uint64_t* timecmp;
+volatile uint64_t* mtime   = 0xF00FFF40u;
+volatile uint64_t* timecmp = 0xF00FFF48u;
 
 void parse_config_string(void);
 static void query_rtc(const char* config_string);
@@ -133,7 +133,7 @@ static void prvSetNextTimerInterrupt(void)
 /* Sets and enable the timer interrupt */
 void vPortSetupTimer(void)
 {
-    parse_config_string();
+ //   parse_config_string();
     *timecmp += *mtime+(configTICK_CLOCK_HZ / configTICK_RATE_HZ);
 
 	/* Enable timer interupt */
@@ -206,7 +206,7 @@ void vPortSysTickHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-static void query_rtc(const char* config_string)
+/*static void query_rtc(const char* config_string)
 {
   query_result res = query_config_string(config_string, "rtc{addr");
   assert(res.start);
@@ -226,4 +226,4 @@ void parse_config_string()
   const char* s = (const char*)(uintptr_t)addr;
   query_rtc(s);
   query_timecmp(s);
-}
+}*/

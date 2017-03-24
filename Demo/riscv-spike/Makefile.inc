@@ -1,6 +1,6 @@
 # File to be included in all makefiles
 
-TARGET=riscv64-unknown-elf
+TARGET=riscv32-unknown-elf
 #-----------------------------------------------------------
 GCC		= $(TARGET)-gcc
 OBJCOPY	= $(TARGET)-objcopy

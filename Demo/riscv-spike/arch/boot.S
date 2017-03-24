@@ -70,7 +70,7 @@
     1 tab == 4 spaces!
 */
 
-#include "encoding.h"
+//#include "encoding.h"
 
 #if __riscv_xlen == 64
 # define STORE    sd
@@ -161,7 +161,7 @@ init_stack:
     /* set stack pointer */
     la	sp, _stack
 
-	j	vSyscallInit
+// TODO	j	vSyscallInit
 
 /* When trap is an interrupt, this function is called */
 interrupt:
@@ -227,7 +227,7 @@ trap_entry:
 
 
 	mv a2, sp
-	jal ulSyscallTrap
+//TODO	jal ulSyscallTrap
 
 	csrw mepc, a0
 

@@ -1,0 +1,7 @@
+*.o
+*.asm
+*.hex
+*.elf
+*~
+
+archBackup

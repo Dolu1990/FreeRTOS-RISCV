@@ -76,7 +76,6 @@
 #include <stdio.h>
 #include <limits.h>
 #include "clib.h"
-#include "syscalls.h"
 
 #define static_assert(cond) switch(0) { case 0: case !!(long)(cond): ; }
 
@@ -90,7 +89,7 @@ int putchar(int ch)
 	buf[buflen++] = ch;
 
 	if (ch == '\n' || buflen == sizeof(buf)) {
-		syscall(SYS_write, 1, (long) buf, buflen);
+		//TODO syscall(SYS_write, 1, (long) buf, buflen);
 		buflen = 0;
 	}
 
@@ -298,7 +297,7 @@ static void vFormatPrintString(void (*putch)(int, void**), void **putdat,
 /* Cause normal process termination  */
 void exit(int code)
 {
-	syscall(SYS_exit, code, 0, 0);
+	//TODO syscall(SYS_exit, code, 0, 0);
 	for(;;) { }
 }
 /*-----------------------------------------------------------*/
