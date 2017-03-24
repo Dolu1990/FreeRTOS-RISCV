@@ -9,7 +9,7 @@ AR		= $(TARGET)-ar
 RANLIB	= $(TARGET)-ranlib
 CCPATH	= /home/maarten.in_t.hout/riscv-build
 
-PROG	= riscv-spike
+PROG	= freeRTOS_demo
 CRT0	= arch/boot.S
 
 FREERTOS_SOURCE_DIR	= ../../Source

@@ -99,7 +99,7 @@ _mstart:
     li	x3, 0
     li	x4, 0
     li	x5, 0
-	li	x6, 0
+    li	x6, 0
     li	x7, 0
     li	x8, 0
     li	x9, 0
@@ -161,6 +161,7 @@ init_stack:
     /* set stack pointer */
     la	sp, _stack
 
+    call main
 // TODO	j	vSyscallInit
 
 /* When trap is an interrupt, this function is called */
@@ -228,6 +229,8 @@ trap_entry:
 
 	mv a2, sp
 //TODO	jal ulSyscallTrap
+fatalException:
+	j fatalException
 
 	csrw mepc, a0
 

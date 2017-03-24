@@ -78,6 +78,7 @@
 #include "clib.h"
 
 #define static_assert(cond) switch(0) { case 0: case !!(long)(cond): ; }
+#define TEST_COM_BASE ((volatile uint32_t*)(0xF00FFF00))
 
 /* Writes char to frontend. */
 #undef putchar
@@ -89,8 +90,11 @@ int putchar(int ch)
 	buf[buflen++] = ch;
 
 	if (ch == '\n' || buflen == sizeof(buf)) {
-		//TODO syscall(SYS_write, 1, (long) buf, buflen);
-		buflen = 0;
+		char* bufPtr = buf;
+		while(buflen != 0){
+			TEST_COM_BASE[0] = *(bufPtr++); 
+			buflen--;
+		}
 	}
 
 	return 0;
