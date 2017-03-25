@@ -99,7 +99,7 @@ CFLAGS = \
 	$(WARNINGS) $(INCLUDES) \
 	-fomit-frame-pointer -fno-strict-aliasing -fno-builtin \
 	-D__gracefulExit -mcmodel=medany \
-        -march=rv32im  -mabi=ilp32 
+        -march=rv32im  -mabi=ilp32 -g
 
 GCCVER 	= $(shell $(GCC) --version | grep gcc | cut -d" " -f9)
 
@@ -114,7 +114,7 @@ PORT_ASM_OBJ = $(PORT_ASM:.S=.o)
 CRT0_OBJ = $(CRT0:.S=.o)
 OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ)
 
-LDFLAGS	 = -T arch/link.ld -nostartfiles -static -nostdlib 
+LDFLAGS	 = -g -T arch/link.ld -nostartfiles -static -nostdlib 
 LIBS	 = -L$(CCPATH)/lib/gcc/$(TARGET)/$(GCCVER) \
 		   -L$(CCPATH)/$(TARGET)/lib \
 		   -lc -lgcc
@@ -132,7 +132,7 @@ all: $(PROG).elf
 $(PROG).elf  : $(OBJS) Makefile 
 	@echo Linking....
 	@$(GCC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
-	@$(OBJDUMP) -S $(PROG).elf > $(PROG).asm	
+	@$(OBJDUMP) -S -d $(PROG).elf > $(PROG).asm	
 	@$(OBJCOPY) -O ihex $(PROG).elf $(PROG).hex 
 
 	@echo Completed $@

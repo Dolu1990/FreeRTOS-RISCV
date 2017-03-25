@@ -134,7 +134,7 @@ static void prvSetNextTimerInterrupt(void)
 void vPortSetupTimer(void)
 {
  //   parse_config_string();
-    *timecmp += *mtime+(configTICK_CLOCK_HZ / configTICK_RATE_HZ);
+	*timecmp += *mtime+(configTICK_CLOCK_HZ / configTICK_RATE_HZ);
 
 	/* Enable timer interupt */
 	__asm volatile("csrs mie,%0"::"r"(0x80));
@@ -206,24 +206,3 @@ void vPortSysTickHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-/*static void query_rtc(const char* config_string)
-{
-  query_result res = query_config_string(config_string, "rtc{addr");
-  assert(res.start);
-  mtime = (void*)(uintptr_t)get_uint(res);
-}
-
-static void query_timecmp(const char* config_string)
-{
-    query_result res = query_config_string(config_string, "core{0{0{timecmp");
-    assert(res.start);
-    timecmp = (void*)(uintptr_t)get_uint(res);
-}
-
-void parse_config_string()
-{
-  uint32_t addr = *(uint32_t*)CONFIG_STRING_ADDR;
-  const char* s = (const char*)(uintptr_t)addr;
-  query_rtc(s);
-  query_timecmp(s);
-}*/
