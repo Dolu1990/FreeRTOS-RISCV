@@ -105,7 +105,7 @@
 /* The period after which the check timer will expire provided no errors have
 been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
+#define mainCHECK_TIMER_PERIOD_MS			( 100UL / portTICK_PERIOD_MS )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -186,49 +186,49 @@ int main( void )
 
 
 
-  	TimerHandle_t printTimer = xTimerCreate
-                   ( 
-                     "Timer2",
-                     ( 500UL / portTICK_PERIOD_MS ),
-
-                     pdTRUE,
-                     ( void * ) 0,
-                     vTimerCallback
-                   );
-        xTimerStart( printTimer, 0 );
-
-  	TimerHandle_t printTimer2 = xTimerCreate
-                   ( /* Just a text name, not used by the RTOS
-                     kernel. */
-                     "Timer3",
-                     /* The timer period in ticks, must be
-                     greater than 0. */
-                     ( 700UL / portTICK_PERIOD_MS ),
-                     /* The timers will auto-reload themselves
-                     when they expire. */
-                     pdTRUE,
-                     /* The ID is used to store a count of the
-                     number of times the timer has expired, which
-                     is initialised to 0. */
-                     ( void * ) 0,
-                     /* Each timer calls the same callback when
-                     it expires. */
-                     vTimerCallback2
-                   );
-        xTimerStart( printTimer2, 0 );
+//  	TimerHandle_t printTimer = xTimerCreate
+//                   (
+//                     "Timer2",
+//                     ( 500UL / portTICK_PERIOD_MS ),
+//
+//                     pdTRUE,
+//                     ( void * ) 0,
+//                     vTimerCallback
+//                   );
+//        xTimerStart( printTimer, 0 );
+//
+//  	TimerHandle_t printTimer2 = xTimerCreate
+//                   ( /* Just a text name, not used by the RTOS
+//                     kernel. */
+//                     "Timer3",
+//                     /* The timer period in ticks, must be
+//                     greater than 0. */
+//                     ( 700UL / portTICK_PERIOD_MS ),
+//                     /* The timers will auto-reload themselves
+//                     when they expire. */
+//                     pdTRUE,
+//                     /* The ID is used to store a count of the
+//                     number of times the timer has expired, which
+//                     is initialised to 0. */
+//                     ( void * ) 0,
+//                     /* Each timer calls the same callback when
+//                     it expires. */
+//                     vTimerCallback2
+//                   );
+//        xTimerStart( printTimer2, 0 );
 
 	TaskHandle_t xHandle = NULL;
 
-    /* Create the task, storing the handle. */
-/*
-   	xTaskCreate(
-                    hungryTask,       //Function that implements the task. 
-                    "hungryTask",         // Text name for the task. 
-                    256,      //Stack size in words, not bytes. 
-                    ( void * ) 1,    //Parameter passed into the task. 
-                    tskIDLE_PRIORITY,// Priority at which the task is created. 
-                    &xHandle );      // Used to pass out the created task's handle. 
-*/
+
+
+//   	xTaskCreate(
+//                    hungryTask,       //Function that implements the task.
+//                    "hungryTask",         // Text name for the task.
+//                    256,      //Stack size in words, not bytes.
+//                    ( void * ) 1,    //Parameter passed into the task.
+//                    tskIDLE_PRIORITY,// Priority at which the task is created.
+//                    &xHandle );      // Used to pass out the created task's handle.
+
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
 	printf("Start kernel\n");
 	vTaskStartScheduler();
@@ -239,9 +239,17 @@ int main( void )
 /*-----------------------------------------------------------*/
 
 /* See the description at the top of this file. */
+uint32_t checkTime = 0;
 static void prvCheckTimerCallback(__attribute__ ((unused)) TimerHandle_t xTimer )
 {
-unsigned long ulErrorFound = pdFALSE;
+//right [0x8002596c] = 0x80024968
+//      [0x80025978] = 8
+	checkTime += 100;
+	printf("tick %d\r\n",checkTime);
+	if(checkTime < 3000)
+		return;
+	printf("check !\r\n");
+	unsigned long ulErrorFound = pdFALSE;
 
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */

@@ -84,6 +84,7 @@ PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/portasm.S
 
 DEMO_SRC = \
 	arch/clib.c \
+	FreeRTOS-openocd.c \
 	main.c
 
 INCLUDES = \
