@@ -134,12 +134,33 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 
 /*-----------------------------------------------------------*/
 
+
+void vTimerCallback( TimerHandle_t xTimer ){
+	printf("miaou\n");
+}
+
+void vTimerCallback2( TimerHandle_t xTimer ){
+	printf("miaou2\n");
+}
+
+void hungryTask( void * pvParameters ){
+	while(1){
+		for(int i = 0;i < 5000;i++){
+			asm("nop");
+		}
+		printf("hungry\n");
+	}
+}
+
 int main( void )
 {
-TimerHandle_t xCheckTimer = NULL;
+	printf("freeRTOS demo boot\n");
+
+	TimerHandle_t xCheckTimer = NULL;
 
 	/* Create the standard demo tasks, including the interrupt nesting test
 	tasks. */
+	printf("Create tasks\n");
 	vCreateBlockTimeTasks();
 	vStartCountingSemaphoreTasks();
 	vStartRecursiveMutexTasks();
@@ -159,11 +180,57 @@ TimerHandle_t xCheckTimer = NULL;
 	time will be ignored because the scheduler has not started yet. */
 	if( xCheckTimer != NULL )
 	{
-		xTimerStart( xCheckTimer, mainDONT_BLOCK );
+		printf("Start timer\n");
+		xTimerStart( xCheckTimer, 0 );
 	}
 
 
+
+  	TimerHandle_t printTimer = xTimerCreate
+                   ( 
+                     "Timer2",
+                     ( 500UL / portTICK_PERIOD_MS ),
+
+                     pdTRUE,
+                     ( void * ) 0,
+                     vTimerCallback
+                   );
+        xTimerStart( printTimer, 0 );
+
+  	TimerHandle_t printTimer2 = xTimerCreate
+                   ( /* Just a text name, not used by the RTOS
+                     kernel. */
+                     "Timer3",
+                     /* The timer period in ticks, must be
+                     greater than 0. */
+                     ( 700UL / portTICK_PERIOD_MS ),
+                     /* The timers will auto-reload themselves
+                     when they expire. */
+                     pdTRUE,
+                     /* The ID is used to store a count of the
+                     number of times the timer has expired, which
+                     is initialised to 0. */
+                     ( void * ) 0,
+                     /* Each timer calls the same callback when
+                     it expires. */
+                     vTimerCallback2
+                   );
+        xTimerStart( printTimer2, 0 );
+
+	TaskHandle_t xHandle = NULL;
+
+    /* Create the task, storing the handle. */
+/*
+   	xTaskCreate(
+                    hungryTask,       //Function that implements the task. 
+                    "hungryTask",         // Text name for the task. 
+                    256,      //Stack size in words, not bytes. 
+                    ( void * ) 1,    //Parameter passed into the task. 
+                    tskIDLE_PRIORITY,// Priority at which the task is created. 
+                    &xHandle );      // Used to pass out the created task's handle. 
+*/
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
+	printf("Start kernel\n");
 	vTaskStartScheduler();
 
 	/* Exit FreeRTOS */
