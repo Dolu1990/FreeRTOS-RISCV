@@ -274,13 +274,12 @@ static void prvCheckTimerCallback(__attribute__ ((unused)) TimerHandle_t xTimer 
 
 	if( ulErrorFound != pdFALSE )
 	{
-		__asm volatile("li t6, 0xbeefdead");
+		//__asm volatile("li t6, 0xbeefdead");
 		printf("Error found! \r\n");
 	}else{
-		__asm volatile("li t6, 0xdeadbeef");
+		//__asm volatile("li t6, 0xdeadbeef");
 		printf("PASS! \r\n");
 	}
-
 	/* Stop scheduler */
     vTaskEndScheduler();
 }

@@ -92,13 +92,6 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 BaseType_t xStartContext[31] = {0};
 #endif
 
-volatile uint64_t* mtime   = 0xF00FFF40u;
-volatile uint64_t* timecmp = 0xF00FFF48u;
-
-void parse_config_string(void);
-static void query_rtc(const char* config_string);
-
-
 /*
  * Handler for timer interrupt
  */
@@ -119,30 +112,7 @@ static void prvSetNextTimerInterrupt( void );
  */
 static void prvTaskExitError( void );
 
-/*-----------------------------------------------------------*/
 
-/* Sets the next timer interrupt
- * Reads current timer register and adds tickrate
- * Using previous timer compare may fail if interrupts were disabled for a long time,
- * which is likely for the very first interrupt. When that happens, compare timer + 
- * tickrate may already be behind current timer and prevent correctly programming
- * the 2nd interrupt
- */
-static void prvSetNextTimerInterrupt(void)
-{
-	*timecmp = *mtime + (configTICK_CLOCK_HZ / configTICK_RATE_HZ);
-}
-/*-----------------------------------------------------------*/
-
-/* Sets and enable the timer interrupt */
-void vPortSetupTimer(void)
-{
-    /* reuse existing routine */
-    prvSetNextTimerInterrupt();
-
-	/* Enable timer interupt */
-	__asm volatile("csrs mie,%0"::"r"(0x80));
-}
 /*-----------------------------------------------------------*/
 
 void prvTaskExitError( void )

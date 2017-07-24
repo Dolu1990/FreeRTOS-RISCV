@@ -84,6 +84,7 @@ PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/portasm.S
 
 DEMO_SRC = \
 	arch/clib.c \
+	arch/systemPort.c \
 	FreeRTOS-openocd.c \
 	main.c
 
@@ -128,28 +129,25 @@ LIBS	 = -L$(CCPATH)/lib/gcc/$(TARGET)/$(GCCVER) \
 	@echo "    CC $<"
 	@$(GCC) -c $(CFLAGS) -o $@ $<
 
-all: $(PROG).elf
+all: bin/$(PROG).elf
 
-$(PROG).elf  : $(OBJS) Makefile 
+bin/$(PROG).elf  : $(OBJS) Makefile 
 	@echo Linking....
-	@$(GCC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
-	@$(OBJDUMP) -S -d $(PROG).elf > $(PROG).asm	
-	@$(OBJCOPY) -O ihex $(PROG).elf $(PROG).hex 
+	@mkdir -p bin
+	@$(GCC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) -o bin/$(PROG).elf	
+	@$(OBJDUMP) -S -d bin/$(PROG).elf > bin/$(PROG).asm	
+	@$(OBJCOPY) -O ihex bin/$(PROG).elf bin/$(PROG).hex 
 
 	@echo Completed $@
 
 clean :
 	@rm -f $(OBJS)
-	@rm -f $(PROG).elf 
-	@rm -f $(PROG).map
-	@rm -f $(PROG).asm
-	@rm -f $(PROG).hex
+	@rm -f bin/$(PROG).elf 
+	@rm -f bin/$(PROG).map
+	@rm -f bin/$(PROG).asm
+	@rm -f bin/$(PROG).hex
 
 force_true:
 	@true
-
-#-------------------------------------------------------------
-sim:
-	spike $(PROG).elf
 
 
