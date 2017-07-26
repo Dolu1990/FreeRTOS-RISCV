@@ -11,11 +11,12 @@
 #define CHECK_PERIOD_MS 2000
 #define CHECK_COUNT 3
 
-#include "QueueSet.h"
+#include "QueueSetPolling.h"
+
 void tickTimer( TimerHandle_t xTimer ){
 	//printf("event");
-	for(int idx = 0;idx < 20;idx++){
-		vQueueSetAccessQueueSetFromISR();
+	for(int idx = 0;idx < 10;idx++){
+		vQueueSetPollingInterruptAccess();
 	}
 }
 
@@ -23,13 +24,13 @@ void tickTimer( TimerHandle_t xTimer ){
 
 
 
+
 void createTests(){
-	vStartQueueSetTasks();
+	vStartQueueSetPollingTask();
 	TimerHandle_t printTimer = xTimerCreate
 				   (
 					 "Timer2",
 					 ( 50UL / portTICK_PERIOD_MS ),
-
 					 pdTRUE,
 					 ( void * ) 0,
 					 tickTimer
@@ -43,7 +44,7 @@ unsigned long checkTests(){
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */
 
-	if( xAreQueueSetTasksStillRunning() != pdPASS )
+	if( xAreQueueSetPollTasksStillRunning() != pdPASS )
 	{
 		printf("Error in xxx tasks \r\n");
 		ulErrorFound |= ( 0x01UL << 1UL );

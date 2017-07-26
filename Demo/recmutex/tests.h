@@ -11,12 +11,11 @@
 #define CHECK_PERIOD_MS 2000
 #define CHECK_COUNT 3
 
-#include "AltQTest.h"
+#include "recmutex.h"
 
 void createTests(){
-	vStartAltGenericQueueTasks(2);
+	vStartRecursiveMutexTasks();
 }
-
 
 unsigned long checkTests(){
 	unsigned long ulErrorFound = pdFALSE;
@@ -24,9 +23,9 @@ unsigned long checkTests(){
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */
 
-	if( xAreAltGenericQueueTasksStillRunning() != pdPASS )
+	if( xAreRecursiveMutexTasksStillRunning() != pdPASS )
 	{
-		printf("Error in AltQTest tasks \r\n");
+		printf("Error in recmutex tasks \r\n");
 		ulErrorFound |= ( 0x01UL << 1UL );
 	}
 

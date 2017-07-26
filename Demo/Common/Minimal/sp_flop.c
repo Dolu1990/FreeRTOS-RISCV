@@ -86,7 +86,7 @@
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
-
+#define fabs(a) ((a < 0) ? -a : a)
 /* Demo program include files. */
 #include "flop.h"
 

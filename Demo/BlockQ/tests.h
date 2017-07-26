@@ -14,7 +14,7 @@
 #include "BlockQ.h"
 
 void createTests(){
-	vStartBlockingQueueTasks(tskIDLE_PRIORITY);
+	vStartBlockingQueueTasks(2);
 }
 
 unsigned long checkTests(){

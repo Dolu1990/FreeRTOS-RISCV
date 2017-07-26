@@ -14,7 +14,7 @@
 #include "AltBlckQ.h"
 
 void createTests(){
-	vStartAltBlockingQueueTasks(tskIDLE_PRIORITY);
+	vStartAltBlockingQueueTasks(2);
 }
 
 unsigned long checkTests(){

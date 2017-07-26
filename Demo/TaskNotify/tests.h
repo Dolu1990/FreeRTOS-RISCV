@@ -11,25 +11,25 @@
 #define CHECK_PERIOD_MS 2000
 #define CHECK_COUNT 3
 
-#include "QueueSet.h"
+#include "TaskNotify.h"
+
+
+
 void tickTimer( TimerHandle_t xTimer ){
 	//printf("event");
 	for(int idx = 0;idx < 20;idx++){
-		vQueueSetAccessQueueSetFromISR();
+		xNotifyTaskFromISR();
 	}
 }
 
 
 
-
-
 void createTests(){
-	vStartQueueSetTasks();
+	vStartTaskNotifyTask();
 	TimerHandle_t printTimer = xTimerCreate
 				   (
 					 "Timer2",
 					 ( 50UL / portTICK_PERIOD_MS ),
-
 					 pdTRUE,
 					 ( void * ) 0,
 					 tickTimer
@@ -43,9 +43,9 @@ unsigned long checkTests(){
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */
 
-	if( xAreQueueSetTasksStillRunning() != pdPASS )
+	if( xAreTaskNotificationTasksStillRunning() != pdPASS )
 	{
-		printf("Error in xxx tasks \r\n");
+		printf("Error in TaskNotify tasks \r\n");
 		ulErrorFound |= ( 0x01UL << 1UL );
 	}
 
