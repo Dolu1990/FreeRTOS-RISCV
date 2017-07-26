@@ -94,7 +94,7 @@ CFLAGS = \
 	$(WARNINGS) $(INCLUDES) \
 	-fomit-frame-pointer -fno-strict-aliasing -fno-builtin \
 	-D__gracefulExit -mcmodel=medany \
-        -march=$(ARCH)  -mabi=ilp32 -g
+        -march=$(ARCH)  -mabi=ilp32 -g -${OPT}
 
 ifeq ($(PRINT_ENABLE),yes)
 	CFLAGS += -DPRINT_ENABLE
@@ -113,18 +113,18 @@ PORT_ASM_OBJ = $(PORT_ASM:.S=.o)
 CRT0_OBJ = $(CRT0:.S=.o)
 OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ)
 
-LDFLAGS	 = -g -T ../arch/link.ld -nostartfiles -static -nostdlib 
+LDFLAGS	 = -g -T ../arch/link.ld -nostartfiles -static -nostdlib -march=$(ARCH)
 LIBS	 = -L$(CCPATH)/lib/gcc/$(TARGET)/$(GCCVER) \
 		   -L$(CCPATH)/$(TARGET)/lib \
 		   -lc -lgcc
 
 %.o: %.c
 	@echo "    CC $<"
-	@$(GCC) -c $(CFLAGS) -o $@ $<
+	$(GCC) -c $(CFLAGS) -o $@ $<
 
 %.o: %.S
 	@echo "    CC $<"
-	@$(GCC) -c $(CFLAGS) -o $@ $<
+	$(GCC) -c $(CFLAGS) -o $@ $<
 
 all: bin/$(PROG).elf
 

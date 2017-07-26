@@ -3,6 +3,7 @@
 RISCV_XLEN ?= 32
 RISCV_LIB  ?= elf
 ARCH ?= rv32i
+OPT ?= O0
 
 PRINT_ENABLE ?= no
 

@@ -18,19 +18,21 @@ for dirName in dirs:
 
 
 
-def doIt(arch):
+def doIt(arch, opt):
 	originalPath = os.environ["PATH"] 
 	os.environ["PATH"] = "/opt/" + arch + "/bin:" + originalPath
 	for test in tests:
 		print(test)
-		assert(call(["make", "-C", "../" + test, "clean", "all", "ARCH=" + arch]) == 0)
-		copyfile("../" + test + "/bin/freeRTOS_demo.elf", "bin/" + test + "_" + arch + ".elf")
-		copyfile("../" + test + "/bin/freeRTOS_demo.hex", "bin/" + test + "_" + arch + ".hex")
-		copyfile("../" + test + "/bin/freeRTOS_demo.asm", "bin/" + test + "_" + arch + ".asm")
+		assert(call(["make", "-C", "../" + test, "clean", "all", "ARCH=" + arch, "OPT=" + opt]) == 0)
+		copyfile("../" + test + "/bin/freeRTOS_demo.elf", "bin/" + test + "_" + arch + "_" + opt + ".elf")
+		copyfile("../" + test + "/bin/freeRTOS_demo.hex", "bin/" + test + "_" + arch + "_" + opt +  ".hex")
+		copyfile("../" + test + "/bin/freeRTOS_demo.asm", "bin/" + test + "_" + arch + "_" + opt +  ".asm")
 
 	os.environ["PATH"]  = originalPath
 
-doIt("rv32i")
-doIt("rv32im")
 
+doIt("rv32i", "O0")
+doIt("rv32im", "O0")
+doIt("rv32i", "O3")
+doIt("rv32im", "O3")
 print "SUCCESS"
