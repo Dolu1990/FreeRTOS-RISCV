@@ -152,13 +152,18 @@ void hungryTask( void * pvParameters ){
 
 int main( void )
 {
+#ifdef PRINT_ENABLE
 	printf("freeRTOS demo boot\n");
+#endif
 
 	TimerHandle_t xCheckTimer = NULL;
 
 	/* Create the standard demo tasks, including the interrupt nesting test
 	tasks. */
+
+#ifdef PRINT_ENABLE
 	printf("Create tasks\n");
+#endif
 	createTests();
 
 	/* Create the software timer that performs the 'check' functionality,
@@ -176,7 +181,10 @@ int main( void )
 	time will be ignored because the scheduler has not started yet. */
 	if( xCheckTimer != NULL )
 	{
+
+#ifdef PRINT_ENABLE
 		printf("Start timer\n");
+#endif
 		xTimerStart( xCheckTimer, 0 );
 	}
 
@@ -226,7 +234,10 @@ int main( void )
 //                    &xHandle );      // Used to pass out the created task's handle.
 
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
+
+#ifdef PRINT_ENABLE
 	printf("Start kernel\n");
+#endif
 	vTaskStartScheduler();
 
 	/* Exit FreeRTOS */
@@ -241,24 +252,35 @@ static void prvCheckTimerCallback(__attribute__ ((unused)) TimerHandle_t xTimer 
 {
 	checkTime += 100;
 	totalTime += 100;
+#ifdef PRINT_ENABLE
 	printf("tick at %d\r\n",totalTime);
+#endif
 	if(checkTime < CHECK_PERIOD_MS){
 		return;
 	}
 	checkTime -= CHECK_PERIOD_MS;
+#ifdef PRINT_ENABLE
 	printf("  check\r\n");
-
+#endif
 	unsigned long ulErrorFound = checkTests();
 	if( ulErrorFound != pdFALSE )
 	{
-		__asm volatile("li t6, 0xbeefdead");
+		//__asm volatile("li t6, 0xbeefdead");
+#ifdef PRINT_ENABLE
 		printf("Error found! \r\n");
+#endif
 	}else{
 		if(totalTime < CHECK_COUNT*CHECK_PERIOD_MS)
 			return;
+#ifdef PRINT_ENABLE
 		printf("PASS! \r\n");
-		__asm volatile("li t6, 0xdeadbeef");
+#endif
+
+		//__asm volatile("li t6, 0xdeadbeef");
 	}
+
+	exit(ulErrorFound);
+
 	/* Stop scheduler */
     vTaskEndScheduler();
 }

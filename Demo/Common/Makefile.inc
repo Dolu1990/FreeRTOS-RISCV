@@ -2,6 +2,9 @@
 
 RISCV_XLEN ?= 32
 RISCV_LIB  ?= elf
+ARCH ?= rv32i
+
+PRINT_ENABLE ?= no
 
 TARGET=riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
 #-----------------------------------------------------------
@@ -12,7 +15,7 @@ AR		= $(TARGET)-ar
 RANLIB	= $(TARGET)-ranlib
 CCPATH	= /home/maarten.in_t.hout/riscv-build
 
-PROG	= freeRTOS_demo
+PROG	?= freeRTOS_demo
 CRT0	= ../arch/boot.S
 
 FREERTOS_SOURCE_DIR	= ../../Source

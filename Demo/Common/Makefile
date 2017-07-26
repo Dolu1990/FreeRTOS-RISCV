@@ -94,7 +94,11 @@ CFLAGS = \
 	$(WARNINGS) $(INCLUDES) \
 	-fomit-frame-pointer -fno-strict-aliasing -fno-builtin \
 	-D__gracefulExit -mcmodel=medany \
-        -march=rv32im  -mabi=ilp32 -g
+        -march=$(ARCH)  -mabi=ilp32 -g
+
+ifeq ($(PRINT_ENABLE),yes)
+	CFLAGS += -DPRINT_ENABLE
+endif
 
 GCCVER 	= $(shell $(GCC) --version | grep gcc | cut -d" " -f9)
 
@@ -130,7 +134,8 @@ bin/$(PROG).elf  : $(OBJS) Makefile
 	@$(GCC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) -o bin/$(PROG).elf	
 	@$(OBJDUMP) -S -d bin/$(PROG).elf > bin/$(PROG).asm	
 	@$(OBJCOPY) -O ihex bin/$(PROG).elf bin/$(PROG).hex 
-	@echo Completed $@
+	@echo Completed $@ ${ARCH}
+
 
 clean :
 	@rm -f $(OBJS)

@@ -76,9 +76,9 @@
 #include <stdio.h>
 #include <limits.h>
 #include "clib.h"
-
-#define static_assert(cond) switch(0) { case 0: case !!(long)(cond): ; }
 #define TEST_COM_BASE ((volatile uint32_t*)(0xF00FFF00))
+#define EXIT(code) TEST_COM_BASE[8] = code
+#define static_assert(cond) switch(0) { case 0: case !!(long)(cond): ; }
 
 /* Writes char to frontend. */
 #undef putchar
@@ -301,6 +301,7 @@ static void vFormatPrintString(void (*putch)(int, void**), void **putdat,
 /* Cause normal process termination  */
 void exit(int code)
 {
+	EXIT(code);
 	//TODO syscall(SYS_exit, code, 0, 0);
 	for(;;) { }
 }
