@@ -89,6 +89,7 @@
 
 /* Demo program include files. */
 #include "flop.h"
+#define fabs(a) ((a < 0) ? -a : a)
 
 #ifndef mathSTACK_SIZE
 	#define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
@@ -130,11 +131,7 @@ short sError = pdFALSE;
 	floating point instructions are executed. */
 	portTASK_USES_FLOATING_POINT();
 
-	d1 = 123.4567;
-	d2 = 2345.6789;
-	d3 = -918.222;
-
-	dAnswer = ( d1 + d2 ) * d3;
+	dAnswer = -2267214.6289032;
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */

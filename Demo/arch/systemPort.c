@@ -17,13 +17,6 @@
  */
 void prvSetNextTimerInterrupt(void)
 {
-	*timecmp += (configTICK_CLOCK_HZ / configTICK_RATE_HZ);
-}
-/*-----------------------------------------------------------*/
-
-/* Sets and enable the timer interrupt */
-void vPortSetupTimer(void)
-{
 	uint32_t mtimeHigh, mtimeLow;
 
 	//Get 64 bits mtime value via 32 bits access
@@ -33,6 +26,14 @@ void vPortSetupTimer(void)
 	}while(mtimeHigh != mtime32[1]);
 
 	*timecmp = ((((uint64_t) mtimeHigh) << 32) | mtimeLow) + (configTICK_CLOCK_HZ / configTICK_RATE_HZ);
+
+}
+/*-----------------------------------------------------------*/
+
+/* Sets and enable the timer interrupt */
+void vPortSetupTimer(void)
+{
+	prvSetNextTimerInterrupt();
 
 	/* Enable timer interupt */
 	__asm volatile("csrs mie,%0"::"r"(0x80));

@@ -93,10 +93,6 @@
 #include "queue.h"
 #include "timers.h"
 
-/* Common demo includes. */
-#include "blocktim.h"
-#include "countsem.h"
-#include "recmutex.h"
 
 /* RISCV includes */
 //#include "arch/syscalls.h"
@@ -152,6 +148,8 @@ void hungryTask( void * pvParameters ){
 	}
 }
 
+#include "tests.h"
+
 int main( void )
 {
 	printf("freeRTOS demo boot\n");
@@ -161,9 +159,7 @@ int main( void )
 	/* Create the standard demo tasks, including the interrupt nesting test
 	tasks. */
 	printf("Create tasks\n");
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartRecursiveMutexTasks();
+	createTests();
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
@@ -239,46 +235,29 @@ int main( void )
 /*-----------------------------------------------------------*/
 
 /* See the description at the top of this file. */
-uint32_t checkTime = 0;
+int32_t checkTime = 0;
+int32_t totalTime = 0;
 static void prvCheckTimerCallback(__attribute__ ((unused)) TimerHandle_t xTimer )
 {
-//right [0x8002596c] = 0x80024968
-//      [0x80025978] = 8
 	checkTime += 100;
-	printf("tick %d\r\n",checkTime);
-	if(checkTime < 3000)
+	totalTime += 100;
+	printf("tick at %d\r\n",totalTime);
+	if(checkTime < CHECK_PERIOD_MS){
 		return;
-	printf("check !\r\n");
-	unsigned long ulErrorFound = pdFALSE;
-
-	/* Check all the demo and test tasks to ensure that they are all still
-	running, and that none have detected an error. */
-
-	if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
-	{
-		printf("Error in block time test tasks \r\n");
-		ulErrorFound |= ( 0x01UL << 1UL );
 	}
+	checkTime -= CHECK_PERIOD_MS;
+	printf("  check\r\n");
 
-	if( xAreCountingSemaphoreTasksStillRunning() != pdPASS )
-	{
-		printf("Error in counting semaphore tasks \r\n");
-		ulErrorFound |= ( 0x01UL << 2UL );
-	}
-
-	if( xAreRecursiveMutexTasksStillRunning() != pdPASS )
-	{
-		printf("Error in recursive mutex tasks \r\n");
-		ulErrorFound |= ( 0x01UL << 3UL );
-	}
-
+	unsigned long ulErrorFound = checkTests();
 	if( ulErrorFound != pdFALSE )
 	{
-		//__asm volatile("li t6, 0xbeefdead");
+		__asm volatile("li t6, 0xbeefdead");
 		printf("Error found! \r\n");
 	}else{
-		//__asm volatile("li t6, 0xdeadbeef");
+		if(totalTime < CHECK_COUNT*CHECK_PERIOD_MS)
+			return;
 		printf("PASS! \r\n");
+		__asm volatile("li t6, 0xdeadbeef");
 	}
 	/* Stop scheduler */
     vTaskEndScheduler();

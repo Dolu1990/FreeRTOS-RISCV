@@ -92,7 +92,7 @@ int putchar(int ch)
 	if (ch == '\n' || buflen == sizeof(buf)) {
 		char* bufPtr = buf;
 		while(buflen != 0){
-			TEST_COM_BASE[0] = *(bufPtr++); 
+			TEST_COM_BASE[0] = *(bufPtr++);  //TODO !!!!
 			buflen--;
 		}
 	}
