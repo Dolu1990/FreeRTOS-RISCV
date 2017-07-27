@@ -29,7 +29,7 @@ unsigned long checkTests(){
 		ulErrorFound |= ( 0x01UL << 1UL );
 	}
 
-	return ulErrorFound | 1;
+	return ulErrorFound;
 }
 
 #endif /* TESTS_H_ */

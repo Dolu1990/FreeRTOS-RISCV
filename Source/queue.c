@@ -931,7 +931,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 							{
 								/* Record the information required to implement
 								priority inheritance should it become necessary. */
-								pxQueue->pxMutexHolder = ( int8_t * ) xTaskGetCurrentTaskHandle();
+								pxQueue->pxMutexHolder = ( int8_t * ) pvTaskIncrementMutexHeldCount();
 							}
 							else
 							{

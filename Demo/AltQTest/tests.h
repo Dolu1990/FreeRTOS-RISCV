@@ -14,7 +14,7 @@
 #include "AltQTest.h"
 
 void createTests(){
-	vStartAltGenericQueueTasks(2);
+	vStartAltGenericQueueTasks(tskIDLE_PRIORITY);
 }
 
 

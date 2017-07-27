@@ -23,7 +23,7 @@ def doIt(arch, opt):
 	os.environ["PATH"] = "/opt/" + arch + "/bin:" + originalPath
 	for test in tests:
 		print(test)
-		assert(call(["make", "-C", "../" + test, "clean", "all", "ARCH=" + arch, "OPT=" + opt]) == 0)
+		assert(call(["make", "-C", "../" + test, "clean", "all", "ARCH=" + arch, "OPT=" + opt, "PRINT_ENABLE=no"]) == 0)
 		copyfile("../" + test + "/bin/freeRTOS_demo.elf", "bin/" + test + "_" + arch + "_" + opt + ".elf")
 		copyfile("../" + test + "/bin/freeRTOS_demo.hex", "bin/" + test + "_" + arch + "_" + opt +  ".hex")
 		copyfile("../" + test + "/bin/freeRTOS_demo.asm", "bin/" + test + "_" + arch + "_" + opt +  ".asm")

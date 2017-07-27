@@ -5,7 +5,7 @@ RISCV_LIB  ?= elf
 ARCH ?= rv32i
 OPT ?= O0
 
-PRINT_ENABLE ?= no
+PRINT_ENABLE ?= yes
 
 TARGET=riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
 #-----------------------------------------------------------
